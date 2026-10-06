@@ -1253,6 +1253,157 @@ body.dragging-now { user-select:none; cursor:grabbing; }
   .timer-panel { padding:1.2rem 0 2rem; }
 }
 
+/* ══ PHONE LAYOUT START ══ */
+/* LIFE v0.9.1 · phone layout.
+   Everything here is scoped to touch phones, so the PC layout is not changed.
+   Portrait phones: width <= 700px.  Landscape phones: short touch screens (see the end of this block). */
+
+/* ── touch basics (any touch screen) ── */
+html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+body { -webkit-tap-highlight-color:transparent; overscroll-behavior:none; }
+.car { touch-action:pan-y; }                         /* lets a sideways swipe move the carousels instead of the browser stealing it */
+@media (hover:none) {                                 /* no sticky hover jumps on touch */
+  .btn:hover, .icon-btn:hover, .back:hover, .la-card:hover, .area-row:hover, .mini-b:hover, .tab:hover { transform:none; }
+  .btn:hover { box-shadow:none; }
+}
+
+@media (max-width:700px), (pointer:coarse) and (max-height:500px) {
+  :root { --pad:16px; }
+
+  /* shared pieces: 44px touch targets, 16px side gutters, readable labels */
+  .top { padding:calc(10px + env(safe-area-inset-top)) var(--pad) 8px; gap:10px; }
+  .back { min-height:44px; padding:0 16px 0 10px; font-size:.7rem; letter-spacing:.16em; }
+  .icon-btn { width:44px; height:44px; }
+  .page-title { font-size:.82rem; letter-spacing:.14em; text-align:right; }
+  .tab { min-height:40px; font-size:.66rem; letter-spacing:.12em; padding:.5rem 1rem; }
+  .btn { min-height:44px; }
+  .btn.big { min-height:52px; padding:.9rem 1.4rem; font-size:.8rem; letter-spacing:.24em; }
+  .mono.sm, .sm { font-size:.7rem; }
+  .car-hint { font-size:.6rem; }
+  .foot, .cal-start { padding:10px var(--pad) calc(12px + env(safe-area-inset-bottom)); background:linear-gradient(to bottom, transparent, rgba(8,9,12,.88) 34%); }
+  .foot .btn.big, .cal-start .btn.big { width:100%; }
+
+  /* ── 1 · title ── */
+  #pg-play .logo { top:calc(14px + env(safe-area-inset-top)); left:var(--pad); }
+  .play-title { font-size:4rem; }
+  .play-date { font-size:.64rem; letter-spacing:.28em; }
+  .play-btn { font-size:.9rem; letter-spacing:.42em; padding:1rem 2.6rem 1rem 3.1rem; min-height:52px; }
+  .float-btns { right:var(--pad); bottom:calc(16px + env(safe-area-inset-bottom)); gap:.6rem; }
+  #pg-play .sys-label { left:var(--pad) !important; bottom:calc(30px + env(safe-area-inset-bottom)) !important; }
+  .corner.tl, .corner.tr { top:calc(10px + env(safe-area-inset-top)); } .corner.tr { right:10px; } .corner.tl { left:10px; } .corner.bl, .corner.br { bottom:10px; } .corner.bl { left:10px; } .corner.br { right:10px; }
+
+  /* ── 2 · profile hub: one scrolling page, Play Today stays pinned ── */
+  #pg-profile > .top { padding-bottom:6px; }
+  .prof-grid { padding:0 var(--pad) 18px; gap:14px; -webkit-overflow-scrolling:touch; }
+  .prof-grid > section { gap:10px; }
+  .la-card { flex:none; width:100%; max-width:none; min-height:0; height:min(46vh,310px); border-radius:20px; }
+  .la-card .lb b { font-size:.9rem; } .la-card .lb span { font-size:.62rem; }
+  .prof-mid { justify-content:flex-start; }
+  .prof-mid .car { --cw:150px; --ch:min(36vh,290px); }
+  .rp-top { font-size:.64rem; } .rank-pace { font-size:.62rem; } .nt { font-size:.62rem; }
+  .prof-mid .car-hint { display:none; }
+  .prof-right { background:none; border:0; box-shadow:none; padding:0; overflow:visible; gap:14px; align-self:stretch; }
+  .tw { padding:.85rem .95rem; border-radius:16px; } .tw-h { font-size:.62rem; } .tw-row span { font-size:.58rem; } .tw-foot { font-size:.6rem; }
+  .const-box { min-height:0; flex:none !important; }
+  .const-h { font-size:.62rem; } .mini-b { font-size:.6rem; min-height:34px; padding:.3rem .8rem; }
+  .const { min-height:280px; }
+  .cs-box .fb.big { min-height:64px; }
+  .sdb { min-height:44px; }
+
+  /* ── 5 · area missions: totals as a 2x2 grid, session bar pinned under the list ── */
+  #pg-missions > .top { flex-wrap:wrap; row-gap:10px; }
+  #pg-missions .top-r.tiles { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  #pg-missions .tiles .stat { width:100%; min-width:0; padding:.4rem .7rem .4rem .45rem; border-radius:14px; gap:.55rem; }
+  #pg-missions .tiles .st-ic { width:2rem; height:2rem; }
+  #pg-missions .tiles .stat b { font-size:1rem; } #pg-missions .tiles .stat span { font-size:.5rem; letter-spacing:.16em; }
+  .missions-layout { padding:0 var(--pad); gap:0; grid-template-rows:max-content; align-content:start; -webkit-overflow-scrolling:touch; }
+  .missions-left { padding:0 0 12px; gap:.6rem; }
+  .missions-area-name { font-size:1.35rem; }
+  .missions-section-label { margin:.7rem 0 .35rem; padding:.6rem .9rem; }
+  .missions-section-label b { font-size:.95rem; } .missions-section-label em { font-size:.72rem; }
+  .m-title { font-size:1rem; }
+  .timer-panel { position:sticky; bottom:0; z-index:6; margin:0 calc(var(--pad) * -1); padding:14px var(--pad) calc(12px + env(safe-area-inset-bottom));
+    display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"lab ctl" "disp ctl" "note note"; align-items:center; justify-items:start; gap:0 12px; text-align:left;
+    background:rgba(8,9,12,.97); border-top:1px solid rgba(255,255,255,.09); box-shadow:0 -14px 22px -10px rgba(8,9,12,.9); }
+  #missions-time { display:none; }
+  .timer-label { grid-area:lab; font-size:.62rem; }
+  .timer-display { grid-area:disp; font-size:2rem; letter-spacing:.04em; }
+  .timer-note { grid-area:note; font-size:.6rem; min-height:0; } .timer-note:empty { display:none; }
+  .timer-controls { grid-area:ctl; gap:.5rem; }
+  .timer-controls .btn { padding:.8rem 1.3rem; min-height:48px; }
+}
+
+@media (max-width:700px), (pointer:coarse) and (max-height:500px) {
+  /* ── 6 · mission view and the day panel become bottom sheets ── */
+  #taskview { align-items:flex-end; padding:0; }
+  .modal-box.tv { width:100%; border-radius:22px 22px 0 0; border-bottom:0; max-height:92%; animation:sheetUp .32s var(--ease); display:flex; flex-direction:column; }
+  .tv-body { padding:1.1rem 1.1rem .4rem; gap:.85rem; max-height:none; flex:1; min-height:0; }
+  .tv-title { font-size:1.45rem; } .tv-desc { font-size:.95rem; line-height:1.6; } .tv-tags span { font-size:.62rem; }
+  .tv-rw b { font-size:1.3rem; } .tv-rw span { font-size:.6rem; } .tv-rw div { padding:.7rem .9rem; }
+  .tv-foot { padding:.8rem 1.1rem calc(1rem + env(safe-area-inset-bottom)); gap:.6rem; }
+  .tv-foot .btn { flex:1; min-height:50px; }
+  @keyframes sheetUp { from { transform:translateY(40px); opacity:0; } to { transform:none; opacity:1; } }
+  .day-panel { top:auto; left:0; right:0; bottom:-100%; width:100%; height:auto; max-height:88%; border-left:0; border-top:1px solid var(--line2); border-radius:22px 22px 0 0; padding:1.1rem var(--pad) calc(1.2rem + env(safe-area-inset-bottom)); transition:bottom .4s var(--ease); gap:.9rem; }
+  .day-panel.open { right:0; bottom:0; }
+  .dp-tt { font-size:.9rem; } .dp-state, .dp-sec label { font-size:.6rem; } .dp-tt i { font-size:.54rem; }
+  .dp-task { padding:.7rem .8rem; }
+
+  /* ── 8 · calendar: compact cells, month fits on one line ── */
+  #pg-calendar > .top { flex-wrap:nowrap; }
+  #pg-calendar > .top > div:first-child { gap:.6rem !important; min-width:0; }
+  .cal-month { font-size:.82rem; letter-spacing:.1em; white-space:nowrap; }
+  .cal-nav { gap:.4rem; } .cal-nav .icon-btn { width:40px; height:40px; }
+  .cal-layout { padding:4px var(--pad) 0; overflow-y:auto; }
+  .cal-grid { flex:none; grid-auto-rows:auto; gap:.3rem; }
+  .cal-grid > :not(.cal-cell) { font-size:.58rem; }
+  .cal-cell { aspect-ratio:1 / 1.3; min-height:0; padding:.3rem .32rem; }
+  .cal-cell .c-num { font-size:.95rem; }
+  .cal-cell .c-dot { width:5px; height:5px; }
+
+  .sty-row { display:grid !important; grid-template-columns:1fr; gap:.5rem; } .sty-row > * { width:100%; }
+  .fps-b span { font-size:.6rem; }
+
+  /* ── 10 · store: two reward cards per row ── */
+  .store-layout { padding:.3rem var(--pad) 1.6rem; gap:1rem; -webkit-overflow-scrolling:touch; }
+  .store-body { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
+  .store-goal { padding:.8rem .9rem; font-size:.85rem; }
+  .store-layout > * { flex:none; }
+  #store-tabs { justify-content:flex-start; flex-wrap:nowrap; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; }
+  #store-tabs .tab { flex:none; }
+  .sc { padding:.85rem .8rem; gap:.3rem; border-radius:14px; } .sc b { font-size:.92rem; line-height:1.25; } .sc-price { font-size:1.05rem; }
+  .sc-btns { gap:.4rem; margin-top:.3rem; flex-wrap:nowrap; } .sc-btns .btn { flex:1; min-width:0; padding:.55rem .2rem; font-size:.56rem; letter-spacing:.06em; white-space:nowrap; min-height:40px; }
+  .store-money { padding:.4rem .8rem; } .store-money b.dlr { font-size:1.1rem; }
+  #pg-store > .top { gap:8px; }
+
+  /* ── overlays (rank, XP, money, streak, graph, achievements, developer, settings): full-screen on phones ── */
+  .overlay:not(.clock-ov) { align-items:flex-start; justify-content:center; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .overlay:not(.clock-ov) > :not(.overlay-close) { width:100% !important; max-width:none !important; max-height:none !important; min-height:100%; overflow:visible !important; margin:0;
+    padding:calc(64px + env(safe-area-inset-top)) var(--pad) calc(24px + env(safe-area-inset-bottom)) !important; }
+  .overlay-close { position:fixed; top:calc(10px + env(safe-area-inset-top)); right:12px; z-index:60; }
+  .overlay-close .icon-btn { width:44px; height:44px; background:rgba(20,22,27,.88); }
+}
+
+
+/* ── phone turned sideways: same layout, kept to a readable column and with the short height in mind ── */
+@media (pointer:coarse) and (max-height:500px) and (min-width:701px) {
+  .prof-grid, .missions-layout, .cal-layout, .store-layout { width:100%; max-width:640px; margin-inline:auto; }
+  .la-card { height:min(70vh,300px); }
+  .prof-mid .car { --ch:min(62vh,270px); }
+  #pg-play .play-center { transform:scale(.8); }
+  .play-title { font-size:3.2rem; }
+  .cs-box { flex-direction:row; }
+  .overlay:not(.clock-ov) > :not(.overlay-close) { max-width:640px !important; margin-inline:auto; padding-top:calc(56px + env(safe-area-inset-top)) !important; }
+  .top { padding-top:calc(6px + env(safe-area-inset-top)); }
+  .timer-display { font-size:1.6rem; }
+  .ck-ring { transform:scale(.62); transform-origin:center; }
+  .day-panel, .modal-box.tv { max-width:640px; margin-inline:auto; }
+  #pg-missions > .top { flex-wrap:nowrap; }
+  #pg-missions .top-r.tiles { grid-template-columns:repeat(4,minmax(0,1fr)); flex:1; }
+  .foot, .cal-start { padding-top:6px; padding-bottom:calc(8px + env(safe-area-inset-bottom)); }
+  .foot .btn.big, .cal-start .btn.big { min-height:44px; padding:.6rem 1rem; }
+}
+
+/* ══ PHONE LAYOUT END ══ */
 </style>
 </head>
 <body>
@@ -5776,5 +5927,17 @@ setInterval(tick, 250);
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) { addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); }); }
 
 </script>
+<!-- PHONE JS START -->
+<script>
+/* LIFE v0.9.1 · touch phones say "swipe" and "tap" instead of scroll, arrow keys, click and Esc */
+(function () {
+  try {
+    if (!window.matchMedia || !matchMedia('(pointer:coarse)').matches) return;
+    document.querySelectorAll('.car-hint').forEach(function (e) { e.textContent = 'SWIPE, THEN TAP THE CENTER CARD'; });
+    var h = document.querySelector('.ck-h'); if (h) h.textContent = 'TAP ANYWHERE TO LEAVE';
+  } catch (e) {}
+})();
+</script>
+<!-- PHONE JS END -->
 </body>
 </html>
